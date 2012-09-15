@@ -32,6 +32,9 @@ import LDAP.TypesLL
 import LDAP.Data
 import Foreign
 import Foreign.C.String
+#if (__GLASGOW_HASKELL__>=705)
+import Foreign.C.Types(CInt(..))
+#endif
 import LDAP.Result
 import Control.Exception(finally)
 

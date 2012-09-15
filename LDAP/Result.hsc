@@ -27,6 +27,9 @@ module LDAP.Result (LDAPMessage, CLDAPMessage,
 import LDAP.Utils
 import LDAP.Types
 import Foreign
+#if (__GLASGOW_HASKELL__>=705)
+import Foreign.C.Types(CInt(..))
+#endif
 
 #include <ldap.h>
 
