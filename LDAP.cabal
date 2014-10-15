@@ -22,7 +22,7 @@ Flag buildtests
   default: False
 
 Library
-  -- C-Sources: glue/glue.c
+  C-Sources: sasl_external.c
   Exposed-Modules: LDAP,
    LDAP.Types,
    LDAP.Init,
