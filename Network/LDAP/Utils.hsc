@@ -24,18 +24,30 @@ should be considered to be the source code.
 
 -}
 
-module LDAP.Utils(checkLE, checkLEe, checkLEn1,
-                  checkNULL, LDAPPtr, fromLDAPPtr,
-                  withLDAPPtr, maybeWithLDAPPtr, withMString,
-                  withCStringArr0, ldap_memfree,
-                  bv2str, newBerval, freeHSBerval,
-                  withAnyArr0) where
+module Network.LDAP.Utils
+( checkLE
+, checkLEe
+, checkLEn1
+, checkNULL
+, LDAPPtr
+, fromLDAPPtr
+, withLDAPPtr
+, maybeWithLDAPPtr
+, withMString
+, withCStringArr0
+, ldap_memfree
+, bv2str
+, newBerval
+, freeHSBerval
+, withAnyArr0
+) where
+
 import Foreign.Ptr
-import LDAP.Constants
-import LDAP.Exceptions
-import LDAP.Types
-import LDAP.Data
-import LDAP.TypesLL
+import Network.LDAP.Constants
+import Network.LDAP.Exceptions
+import Network.LDAP.Types
+import Network.LDAP.Data
+import Network.LDAP.TypesLL
 import Control.Exception
 import Data.Dynamic
 import Foreign.C.Error

@@ -20,12 +20,14 @@ LDAP Result Processing
 Written by John Goerzen, jgoerzen\@complete.org
 -}
 
-module LDAP.Result (LDAPMessage, CLDAPMessage,
-                    ldap_1result
-                   ) where
+module Network.LDAP.Result
+( LDAPMessage
+, CLDAPMessage
+, ldap_1result
+) where
 
-import LDAP.Utils
-import LDAP.Types
+import Network.LDAP.Utils
+import Network.LDAP.Types
 import Foreign
 #if (__GLASGOW_HASKELL__>=705)
 import Foreign.C.Types(CInt(..))

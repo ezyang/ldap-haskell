@@ -20,24 +20,26 @@ LDAP changes
 Written by John Goerzen, jgoerzen\@complete.org
 -}
 
-module LDAP.Modify (-- * Basics
-                    LDAPModOp(..), LDAPMod(..),
-                    ldapAdd, ldapModify, ldapDelete,
-                    -- * Utilities
-                    list2ldm, pairs2ldm
-                   )
-where
+module Network.LDAP.Modify 
+( LDAPModOp(..)
+, LDAPMod(..)
+, ldapAdd
+, ldapModify
+, ldapDelete
+, list2ldm
+, pairs2ldm
+) where
 
-import LDAP.Utils
-import LDAP.Types
-import LDAP.TypesLL
-import LDAP.Data
+import Network.LDAP.Utils
+import Network.LDAP.Types
+import Network.LDAP.TypesLL
+import Network.LDAP.Data
 import Foreign
 import Foreign.C.String
 #if (__GLASGOW_HASKELL__>=705)
 import Foreign.C.Types(CInt(..))
 #endif
-import LDAP.Result
+import Network.LDAP.Result
 import Control.Exception(finally)
 import Data.Bits
 

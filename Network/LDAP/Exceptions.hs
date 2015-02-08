@@ -21,20 +21,18 @@ Handling LDAP Exceptions
 Written by John Goerzen, jgoerzen\@complete.org
 -}
 
-module LDAP.Exceptions (-- * Types
-                        LDAPException(..),
-                        -- * General Catching
-                        catchLDAP,
-                        handleLDAP,
-                        failLDAP,
-                        throwLDAP
-                        )
+module Network.LDAP.Exceptions
+( LDAPException(..) -- * Types
+, catchLDAP         -- * General Catching
+, handleLDAP
+, failLDAP
+, throwLDAP
+) where
 
-where
 import Data.Typeable
 import Control.Exception
-import LDAP.Types
-import LDAP.Data
+import Network.LDAP.Types
+import Network.LDAP.Data
 
 #if __GLASGOW_HASKELL__ < 610
 import Data.Dynamic

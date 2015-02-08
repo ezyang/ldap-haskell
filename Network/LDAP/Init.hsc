@@ -20,20 +20,21 @@ Initialization and shutdown for LDAP programs
 Written by John Goerzen, jgoerzen\@complete.org
 -}
 
-module LDAP.Init(ldapOpen,
-                 ldapInit,
-                 ldapInitialize,
-                 ldapSimpleBind)
-where
+module Network.LDAP.Init
+( ldapOpen
+, ldapInit
+, ldapInitialize
+, ldapSimpleBind
+) where
 
 import Foreign.Ptr
 import Foreign.ForeignPtr
 import Foreign.C.String
 import Foreign.Marshal.Alloc
 import Foreign.Storable
-import LDAP.Types
+import Network.LDAP.Types
 import Foreign.C.Types
-import LDAP.Utils
+import Network.LDAP.Utils
 import Foreign.Marshal.Utils
 
 #include <ldap.h>

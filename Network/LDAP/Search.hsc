@@ -20,22 +20,24 @@ LDAP Searching
 Written by John Goerzen, jgoerzen\@complete.org
 -}
 
-module LDAP.Search (SearchAttributes(..),
-                    LDAPEntry(..), LDAPScope(..),
-                    ldapSearch, 
-                   )
+module Network.LDAP.Search
+( SearchAttributes(..)
+, LDAPEntry(..)
+, LDAPScope(..)
+, ldapSearch
+)
 where
 
-import LDAP.Utils
-import LDAP.Types
-import LDAP.TypesLL
-import LDAP.Data
+import Network.LDAP.Utils
+import Network.LDAP.Types
+import Network.LDAP.TypesLL
+import Network.LDAP.Data
 import Foreign
 import Foreign.C.String
 #if (__GLASGOW_HASKELL__>=705)
 import Foreign.C.Types(CInt(..))
 #endif
-import LDAP.Result
+import Network.LDAP.Result
 import Control.Exception(finally)
 
 #include <ldap.h>
