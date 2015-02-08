@@ -21,10 +21,10 @@ Written by John Goerzen, jgoerzen\@complete.org
 -}
 
 module Network.LDAP.Init
-( ldapOpen
-, ldapInit
-, ldapInitialize
-, ldapSimpleBind
+( open
+, init
+, initialize
+, simpleBind
 ) where
 
 import Foreign.Ptr
@@ -40,13 +40,13 @@ import Foreign.Marshal.Utils
 #include <ldap.h>
 
 
-ldapSetVersion3 :: LDAPPtr -> IO LDAPInt
-ldapSetVersion3 cld =
+setVersion3 :: LDAPPtr -> IO LDAPInt
+setVersion3 cld =
     with ((#{const LDAP_VERSION3})::LDAPInt) $ \copt ->
     ldap_set_option cld #{const LDAP_OPT_PROTOCOL_VERSION} (castPtr copt)
 
-ldapSetRestart :: LDAPPtr -> IO LDAPInt
-ldapSetRestart cld =
+setRestart :: LDAPPtr -> IO LDAPInt
+setRestart cld =
     with ((#{const LDAP_OPT_ON})::LDAPInt) $ \copt ->
     ldap_set_option cld #{const LDAP_OPT_RESTART} (castPtr copt)
 
@@ -54,10 +54,10 @@ ldapSetRestart cld =
 The default port is given in 'LDAP.Constants.ldapPort'.
 
 Could throw IOError on failure. -}
-ldapInit :: String              -- ^ Host
-         -> LDAPInt             -- ^ Port
-         -> IO LDAP             -- ^ New LDAP Obj
-ldapInit host port =
+init :: String              -- ^ Host
+     -> LDAPInt             -- ^ Port
+     -> IO LDAP             -- ^ New LDAP Obj
+init host port =
     withCString host $ \cs ->
        do rv <- fromLDAPPtr "ldapInit" (cldap_init cs port)
           withForeignPtr rv $ \cld -> do
@@ -65,11 +65,11 @@ ldapInit host port =
               ldapSetRestart cld
           return rv
 
-{- | Like 'ldapInit', but establish network connection immediately. -}
-ldapOpen :: String              -- ^ Host
-            -> LDAPInt          -- ^ Port
-            -> IO LDAP          -- ^ New LDAP Obj
-ldapOpen host port =
+{- | Like 'init', but establish network connection immediately. -}
+open :: String           -- ^ Host
+     -> LDAPInt          -- ^ Port
+     -> IO LDAP          -- ^ New LDAP Obj
+open host port =
     withCString host (\cs ->
         do rv <- fromLDAPPtr "ldapOpen" (cldap_open cs port)
            withForeignPtr rv ldapSetRestart
@@ -79,9 +79,9 @@ ldapOpen host port =
 list of URIs) which can contain a schema, a host and a port.  Besides
 ldap, valid schemas are ldaps (LDAP over TLS), ldapi (LDAP over IPC),
 and cldap (connectionless LDAP). -}
-ldapInitialize :: String        -- ^ URI
-                  -> IO LDAP    -- ^ New LDAP Obj
-ldapInitialize uri =
+initialize :: String        -- ^ URI
+           -> IO LDAP    -- ^ New LDAP Obj
+initialize uri =
     withCString uri $ \cs ->
     alloca $ \pp -> do
     r <- ldap_initialize pp cs
@@ -94,22 +94,21 @@ ldapInitialize uri =
 
 
 {- | Bind to the remote server. -}
-ldapSimpleBind :: LDAP          -- ^ LDAP Object
-               -> String        -- ^ DN (Distinguished Name)
-               -> String        -- ^ Password
-               -> IO ()
-ldapSimpleBind ld dn passwd =
+simpleBind :: LDAP          -- ^ LDAP Object
+           -> String        -- ^ DN (Distinguished Name)
+           -> String        -- ^ Password
+           -> IO ()
+simpleBind ld dn passwd =
     withLDAPPtr ld (\ptr ->
      withCString dn (\cdn ->
-      withCString passwd (\cpasswd -> 
+      withCString passwd (\cpasswd ->
         do checkLE "ldapSimpleBind" ld
-                            (ldap_simple_bind_s ptr cdn cpasswd)
+           (ldap_simple_bind_s ptr cdn cpasswd)
            return ()
-                         )))
+      )))
 
 foreign import ccall unsafe "ldap.h ldap_init"
   cldap_init :: CString -> CInt -> IO LDAPPtr
-
 
 foreign import ccall unsafe "ldap.h ldap_open"
   cldap_open :: CString -> CInt -> IO LDAPPtr
