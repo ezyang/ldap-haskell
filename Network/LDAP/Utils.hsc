@@ -68,7 +68,7 @@ import Foreign.C.Types
 {- | Check the return value.  If it's something other than 
 'LDAP.Constants.ldapSuccess', raise an LDAP exception. -}
 checkLE :: String -> LDAP -> IO LDAPInt -> IO LDAPInt
-checkLE = checkLEe (\r -> r == fromIntegral (fromEnum LdapSuccess))
+checkLE = checkLEe (\r -> r == fromIntegral (fromEnum Success))
 
 checkLEn1 :: String -> LDAP -> IO LDAPInt -> IO LDAPInt
 checkLEn1 = checkLEe (\r -> r /= -1)
@@ -78,10 +78,10 @@ checkLEe test callername ld action =
     do result <- action
        if test result
           then return result
-          else do errornum <- ldapGetOptionIntNoEc ld LdapOptErrorNumber
+          else do errornum <- ldapGetOptionIntNoEc ld OptErrorNumber
                   let hserror = toEnum (fromIntegral errornum)
                   err2string <- (ldap_err2string errornum >>= peekCString)
-                  objstring <- ldapGetOptionStrNoEc ld LdapOptErrorString
+                  objstring <- ldapGetOptionStrNoEc ld OptErrorString
                   let desc = case objstring of
                                              Nothing -> err2string
                                              Just x -> err2string ++ " (" ++
@@ -90,14 +90,6 @@ checkLEe test callername ld action =
                                            description = desc,
                                            caller = callername }
                   throwLDAP exc
-{-
-
-          else do s <- (ldap_err2string result >>= peekCString)
-                  let exc = LDAPException {code = (toEnum (fromIntegral result)), 
-                                           description = s,
-                                           caller = callername}
-                  throwLDAP exc
--}
 
 {- | Raise an IOError based on errno if getting a NULL.  Identical
 to Foreign.C.Error.throwErrnoIfNull. -}
@@ -124,7 +116,7 @@ maybeWithLDAPPtr Nothing func = func nullPtr
 maybeWithLDAPPtr (Just x) y = withLDAPPtr x y
 
 {- | Returns an int, doesn't raise exceptions on err (just crashes) -}
-ldapGetOptionIntNoEc :: LDAP -> LDAPOptionCode -> IO LDAPInt
+ldapGetOptionIntNoEc :: LDAP -> OptionCode -> IO LDAPInt
 ldapGetOptionIntNoEc ld oc =
     withLDAPPtr ld (\pld -> alloca (f pld))
     where oci = fromIntegral $ fromEnum oc
@@ -135,7 +127,7 @@ ldapGetOptionIntNoEc ld oc =
                     else peek ptr
 
 {- | Returns a string, doesn't raise exceptions on err (just crashes) -}
-ldapGetOptionStrNoEc :: LDAP -> LDAPOptionCode -> IO (Maybe String)
+ldapGetOptionStrNoEc :: LDAP -> OptionCode -> IO (Maybe String)
 ldapGetOptionStrNoEc ld oc =
     withLDAPPtr ld (\pld -> alloca (f pld))
     where

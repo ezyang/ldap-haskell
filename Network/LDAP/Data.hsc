@@ -19,326 +19,316 @@ module Network.LDAP.Data( module Network.LDAP.Data) where
 #include "ldap.h"
 
 
-data LDAPReturnCode =
-   LdapSuccess
- | LdapOperationsError
- | LdapProtocolError
- | LdapTimelimitExceeded
- | LdapSizelimitExceeded
- | LdapCompareFalse
- | LdapCompareTrue
- | LdapAuthMethodNotSupported
- | LdapStrongAuthNotSupported
- | LdapStrongAuthRequired
- | LdapPartialResults
- | LdapReferral
- | LdapAdminlimitExceeded
- | LdapUnavailableCriticalExtension
- | LdapConfidentialityRequired
- | LdapSaslBindInProgress
- | LdapNoSuchAttribute
- | LdapUndefinedType
- | LdapInappropriateMatching
- | LdapConstraintViolation
- | LdapTypeOrValueExists
- | LdapInvalidSyntax
- | LdapNoSuchObject
- | LdapAliasProblem
- | LdapInvalidDnSyntax
- | LdapIsLeaf
- | LdapAliasDerefProblem
- | LdapXProxyAuthzFailure
- | LdapInappropriateAuth
- | LdapInvalidCredentials
- | LdapInsufficientAccess
- | LdapBusy
- | LdapUnavailable
- | LdapUnwillingToPerform
- | LdapLoopDetect
- | LdapNamingViolation
- | LdapObjectClassViolation
- | LdapNotAllowedOnNonleaf
- | LdapNotAllowedOnRdn
- | LdapAlreadyExists
- | LdapNoObjectClassMods
- | LdapResultsTooLarge
- | LdapAffectsMultipleDsas
- | LdapOther
- | LdapServerDown
- | LdapLocalError
- | LdapEncodingError
- | LdapDecodingError
- | LdapTimeout
- | LdapAuthUnknown
- | LdapFilterError
- | LdapUserCancelled
- | LdapParamError
- | LdapNoMemory
- | LdapConnectError
- | LdapNotSupported
- | LdapControlNotFound
- | LdapNoResultsReturned
- | LdapMoreResultsToReturn
- | LdapClientLoop
- | LdapReferralLimitExceeded
- | UnknownLDAPReturnCode Int
-
- deriving (Show)
+data LDAPReturnCode = Success
+                    | OperationsError
+                    | ProtocolError
+                    | TimelimitExceeded
+                    | SizelimitExceeded
+                    | CompareFalse
+                    | CompareTrue
+                    | AuthMethodNotSupported
+                    | StrongAuthNotSupported
+                    | StrongAuthRequired
+                    | PartialResults
+                    | Referral
+                    | AdminlimitExceeded
+                    | UnavailableCriticalExtension
+                    | ConfidentialityRequired
+                    | SaslBindInProgress
+                    | NoSuchAttribute
+                    | UndefinedType
+                    | InappropriateMatching
+                    | ConstraintViolation
+                    | TypeOrValueExists
+                    | InvalidSyntax
+                    | NoSuchObject
+                    | AliasProblem
+                    | InvalidDnSyntax
+                    | IsLeaf
+                    | AliasDerefProblem
+                    | XProxyAuthzFailure
+                    | InappropriateAuth
+                    | InvalidCredentials
+                    | InsufficientAccess
+                    | Busy
+                    | Unavailable
+                    | UnwillingToPerform
+                    | LoopDetect
+                    | NamingViolation
+                    | ObjectClassViolation
+                    | NotAllowedOnNonleaf
+                    | NotAllowedOnRdn
+                    | AlreadyExists
+                    | NoObjectClassMods
+                    | ResultsTooLarge
+                    | AffectsMultipleDsas
+                    | Other
+                    | ServerDown
+                    | LocalError
+                    | EncodingError
+                    | DecodingError
+                    | Timeout
+                    | AuthUnknown
+                    | FilterError
+                    | UserCancelled
+                    | ParamError
+                    | NoMemory
+                    | ConnectError
+                    | NotSupported
+                    | ControlNotFound
+                    | NoResultsReturned
+                    | MoreResultsToReturn
+                    | ClientLoop
+                    | ReferralLimitExceeded
+                    | UnknownReturnCode Int
+    deriving (Show)
 
 instance Enum LDAPReturnCode where
- toEnum (#{const LDAP_SUCCESS}) = LdapSuccess
- toEnum (#{const LDAP_OPERATIONS_ERROR}) = LdapOperationsError
- toEnum (#{const LDAP_PROTOCOL_ERROR}) = LdapProtocolError
- toEnum (#{const LDAP_TIMELIMIT_EXCEEDED}) = LdapTimelimitExceeded
- toEnum (#{const LDAP_SIZELIMIT_EXCEEDED}) = LdapSizelimitExceeded
- toEnum (#{const LDAP_COMPARE_FALSE}) = LdapCompareFalse
- toEnum (#{const LDAP_COMPARE_TRUE}) = LdapCompareTrue
- toEnum (#{const LDAP_AUTH_METHOD_NOT_SUPPORTED}) = LdapAuthMethodNotSupported
- toEnum (#{const LDAP_STRONG_AUTH_NOT_SUPPORTED}) = LdapStrongAuthNotSupported
- toEnum (#{const LDAP_STRONG_AUTH_REQUIRED}) = LdapStrongAuthRequired
- toEnum (#{const LDAP_PARTIAL_RESULTS}) = LdapPartialResults
- toEnum (#{const LDAP_REFERRAL}) = LdapReferral
- toEnum (#{const LDAP_ADMINLIMIT_EXCEEDED}) = LdapAdminlimitExceeded
- toEnum (#{const LDAP_UNAVAILABLE_CRITICAL_EXTENSION}) = LdapUnavailableCriticalExtension
- toEnum (#{const LDAP_CONFIDENTIALITY_REQUIRED}) = LdapConfidentialityRequired
- toEnum (#{const LDAP_SASL_BIND_IN_PROGRESS}) = LdapSaslBindInProgress
- toEnum (#{const LDAP_NO_SUCH_ATTRIBUTE}) = LdapNoSuchAttribute
- toEnum (#{const LDAP_UNDEFINED_TYPE}) = LdapUndefinedType
- toEnum (#{const LDAP_INAPPROPRIATE_MATCHING}) = LdapInappropriateMatching
- toEnum (#{const LDAP_CONSTRAINT_VIOLATION}) = LdapConstraintViolation
- toEnum (#{const LDAP_TYPE_OR_VALUE_EXISTS}) = LdapTypeOrValueExists
- toEnum (#{const LDAP_INVALID_SYNTAX}) = LdapInvalidSyntax
- toEnum (#{const LDAP_NO_SUCH_OBJECT}) = LdapNoSuchObject
- toEnum (#{const LDAP_ALIAS_PROBLEM}) = LdapAliasProblem
- toEnum (#{const LDAP_INVALID_DN_SYNTAX}) = LdapInvalidDnSyntax
- toEnum (#{const LDAP_IS_LEAF}) = LdapIsLeaf
- toEnum (#{const LDAP_ALIAS_DEREF_PROBLEM}) = LdapAliasDerefProblem
- toEnum (#{const LDAP_X_PROXY_AUTHZ_FAILURE}) = LdapXProxyAuthzFailure
- toEnum (#{const LDAP_INAPPROPRIATE_AUTH}) = LdapInappropriateAuth
- toEnum (#{const LDAP_INVALID_CREDENTIALS}) = LdapInvalidCredentials
- toEnum (#{const LDAP_INSUFFICIENT_ACCESS}) = LdapInsufficientAccess
- toEnum (#{const LDAP_BUSY}) = LdapBusy
- toEnum (#{const LDAP_UNAVAILABLE}) = LdapUnavailable
- toEnum (#{const LDAP_UNWILLING_TO_PERFORM}) = LdapUnwillingToPerform
- toEnum (#{const LDAP_LOOP_DETECT}) = LdapLoopDetect
- toEnum (#{const LDAP_NAMING_VIOLATION}) = LdapNamingViolation
- toEnum (#{const LDAP_OBJECT_CLASS_VIOLATION}) = LdapObjectClassViolation
- toEnum (#{const LDAP_NOT_ALLOWED_ON_NONLEAF}) = LdapNotAllowedOnNonleaf
- toEnum (#{const LDAP_NOT_ALLOWED_ON_RDN}) = LdapNotAllowedOnRdn
- toEnum (#{const LDAP_ALREADY_EXISTS}) = LdapAlreadyExists
- toEnum (#{const LDAP_NO_OBJECT_CLASS_MODS}) = LdapNoObjectClassMods
- toEnum (#{const LDAP_RESULTS_TOO_LARGE}) = LdapResultsTooLarge
- toEnum (#{const LDAP_AFFECTS_MULTIPLE_DSAS}) = LdapAffectsMultipleDsas
- toEnum (#{const LDAP_OTHER}) = LdapOther
- toEnum (#{const LDAP_SERVER_DOWN}) = LdapServerDown
- toEnum (#{const LDAP_LOCAL_ERROR}) = LdapLocalError
- toEnum (#{const LDAP_ENCODING_ERROR}) = LdapEncodingError
- toEnum (#{const LDAP_DECODING_ERROR}) = LdapDecodingError
- toEnum (#{const LDAP_TIMEOUT}) = LdapTimeout
- toEnum (#{const LDAP_AUTH_UNKNOWN}) = LdapAuthUnknown
- toEnum (#{const LDAP_FILTER_ERROR}) = LdapFilterError
- toEnum (#{const LDAP_USER_CANCELLED}) = LdapUserCancelled
- toEnum (#{const LDAP_PARAM_ERROR}) = LdapParamError
- toEnum (#{const LDAP_NO_MEMORY}) = LdapNoMemory
- toEnum (#{const LDAP_CONNECT_ERROR}) = LdapConnectError
- toEnum (#{const LDAP_NOT_SUPPORTED}) = LdapNotSupported
- toEnum (#{const LDAP_CONTROL_NOT_FOUND}) = LdapControlNotFound
- toEnum (#{const LDAP_NO_RESULTS_RETURNED}) = LdapNoResultsReturned
- toEnum (#{const LDAP_MORE_RESULTS_TO_RETURN}) = LdapMoreResultsToReturn
- toEnum (#{const LDAP_CLIENT_LOOP}) = LdapClientLoop
- toEnum (#{const LDAP_REFERRAL_LIMIT_EXCEEDED}) = LdapReferralLimitExceeded
- toEnum x = UnknownLDAPReturnCode x
+ toEnum (#{const LDAP_SUCCESS})                        = Success
+ toEnum (#{const LDAP_OPERATIONS_ERROR})               = OperationsError
+ toEnum (#{const LDAP_PROTOCOL_ERROR})                 = ProtocolError
+ toEnum (#{const LDAP_TIMELIMIT_EXCEEDED})             = TimelimitExceeded
+ toEnum (#{const LDAP_SIZELIMIT_EXCEEDED})             = SizelimitExceeded
+ toEnum (#{const LDAP_COMPARE_FALSE})                  = CompareFalse
+ toEnum (#{const LDAP_COMPARE_TRUE})                   = CompareTrue
+ toEnum (#{const LDAP_AUTH_METHOD_NOT_SUPPORTED})      = AuthMethodNotSupported
+ toEnum (#{const LDAP_STRONG_AUTH_NOT_SUPPORTED})      = StrongAuthNotSupported
+ toEnum (#{const LDAP_STRONG_AUTH_REQUIRED})           = StrongAuthRequired
+ toEnum (#{const LDAP_PARTIAL_RESULTS})                = PartialResults
+ toEnum (#{const LDAP_REFERRAL})                       = Referral
+ toEnum (#{const LDAP_ADMINLIMIT_EXCEEDED})            = AdminlimitExceeded
+ toEnum (#{const LDAP_UNAVAILABLE_CRITICAL_EXTENSION}) = UnavailableCriticalExtension
+ toEnum (#{const LDAP_CONFIDENTIALITY_REQUIRED})       = ConfidentialityRequired
+ toEnum (#{const LDAP_SASL_BIND_IN_PROGRESS})          = SaslBindInProgress
+ toEnum (#{const LDAP_NO_SUCH_ATTRIBUTE})              = NoSuchAttribute
+ toEnum (#{const LDAP_UNDEFINED_TYPE})                 = UndefinedType
+ toEnum (#{const LDAP_INAPPROPRIATE_MATCHING})         = InappropriateMatching
+ toEnum (#{const LDAP_CONSTRAINT_VIOLATION})           = ConstraintViolation
+ toEnum (#{const LDAP_TYPE_OR_VALUE_EXISTS})           = TypeOrValueExists
+ toEnum (#{const LDAP_INVALID_SYNTAX})                 = InvalidSyntax
+ toEnum (#{const LDAP_NO_SUCH_OBJECT})                 = NoSuchObject
+ toEnum (#{const LDAP_ALIAS_PROBLEM})                  = AliasProblem
+ toEnum (#{const LDAP_INVALID_DN_SYNTAX})              = InvalidDnSyntax
+ toEnum (#{const LDAP_IS_LEAF})                        = IsLeaf
+ toEnum (#{const LDAP_ALIAS_DEREF_PROBLEM})            = AliasDerefProblem
+ toEnum (#{const LDAP_X_PROXY_AUTHZ_FAILURE})          = XProxyAuthzFailure
+ toEnum (#{const LDAP_INAPPROPRIATE_AUTH})             = InappropriateAuth
+ toEnum (#{const LDAP_INVALID_CREDENTIALS})            = InvalidCredentials
+ toEnum (#{const LDAP_INSUFFICIENT_ACCESS})            = InsufficientAccess
+ toEnum (#{const LDAP_BUSY})                           = Busy
+ toEnum (#{const LDAP_UNAVAILABLE})                    = Unavailable
+ toEnum (#{const LDAP_UNWILLING_TO_PERFORM})           = UnwillingToPerform
+ toEnum (#{const LDAP_LOOP_DETECT})                    = LoopDetect
+ toEnum (#{const LDAP_NAMING_VIOLATION})               = NamingViolation
+ toEnum (#{const LDAP_OBJECT_CLASS_VIOLATION})         = ObjectClassViolation
+ toEnum (#{const LDAP_NOT_ALLOWED_ON_NONLEAF})         = NotAllowedOnNonleaf
+ toEnum (#{const LDAP_NOT_ALLOWED_ON_RDN})             = NotAllowedOnRdn
+ toEnum (#{const LDAP_ALREADY_EXISTS})                 = AlreadyExists
+ toEnum (#{const LDAP_NO_OBJECT_CLASS_MODS})           = NoObjectClassMods
+ toEnum (#{const LDAP_RESULTS_TOO_LARGE})              = ResultsTooLarge
+ toEnum (#{const LDAP_AFFECTS_MULTIPLE_DSAS})          = AffectsMultipleDsas
+ toEnum (#{const LDAP_OTHER})                          = Other
+ toEnum (#{const LDAP_SERVER_DOWN})                    = ServerDown
+ toEnum (#{const LDAP_LOCAL_ERROR})                    = LocalError
+ toEnum (#{const LDAP_ENCODING_ERROR})                 = EncodingError
+ toEnum (#{const LDAP_DECODING_ERROR})                 = DecodingError
+ toEnum (#{const LDAP_TIMEOUT})                        = Timeout
+ toEnum (#{const LDAP_AUTH_UNKNOWN})                   = AuthUnknown
+ toEnum (#{const LDAP_FILTER_ERROR})                   = FilterError
+ toEnum (#{const LDAP_USER_CANCELLED})                 = UserCancelled
+ toEnum (#{const LDAP_PARAM_ERROR})                    = ParamError
+ toEnum (#{const LDAP_NO_MEMORY})                      = NoMemory
+ toEnum (#{const LDAP_CONNECT_ERROR})                  = ConnectError
+ toEnum (#{const LDAP_NOT_SUPPORTED})                  = NotSupported
+ toEnum (#{const LDAP_CONTROL_NOT_FOUND})              = ControlNotFound
+ toEnum (#{const LDAP_NO_RESULTS_RETURNED})            = NoResultsReturned
+ toEnum (#{const LDAP_MORE_RESULTS_TO_RETURN})         = MoreResultsToReturn
+ toEnum (#{const LDAP_CLIENT_LOOP})                    = ClientLoop
+ toEnum (#{const LDAP_REFERRAL_LIMIT_EXCEEDED})        = ReferralLimitExceeded
+ toEnum x                                              = UnknownReturnCode x
 
- fromEnum LdapSuccess = (#{const LDAP_SUCCESS})
- fromEnum LdapOperationsError = (#{const LDAP_OPERATIONS_ERROR})
- fromEnum LdapProtocolError = (#{const LDAP_PROTOCOL_ERROR})
- fromEnum LdapTimelimitExceeded = (#{const LDAP_TIMELIMIT_EXCEEDED})
- fromEnum LdapSizelimitExceeded = (#{const LDAP_SIZELIMIT_EXCEEDED})
- fromEnum LdapCompareFalse = (#{const LDAP_COMPARE_FALSE})
- fromEnum LdapCompareTrue = (#{const LDAP_COMPARE_TRUE})
- fromEnum LdapAuthMethodNotSupported = (#{const LDAP_AUTH_METHOD_NOT_SUPPORTED})
- fromEnum LdapStrongAuthNotSupported = (#{const LDAP_STRONG_AUTH_NOT_SUPPORTED})
- fromEnum LdapStrongAuthRequired = (#{const LDAP_STRONG_AUTH_REQUIRED})
- fromEnum LdapPartialResults = (#{const LDAP_PARTIAL_RESULTS})
- fromEnum LdapReferral = (#{const LDAP_REFERRAL})
- fromEnum LdapAdminlimitExceeded = (#{const LDAP_ADMINLIMIT_EXCEEDED})
- fromEnum LdapUnavailableCriticalExtension = (#{const LDAP_UNAVAILABLE_CRITICAL_EXTENSION})
- fromEnum LdapConfidentialityRequired = (#{const LDAP_CONFIDENTIALITY_REQUIRED})
- fromEnum LdapSaslBindInProgress = (#{const LDAP_SASL_BIND_IN_PROGRESS})
- fromEnum LdapNoSuchAttribute = (#{const LDAP_NO_SUCH_ATTRIBUTE})
- fromEnum LdapUndefinedType = (#{const LDAP_UNDEFINED_TYPE})
- fromEnum LdapInappropriateMatching = (#{const LDAP_INAPPROPRIATE_MATCHING})
- fromEnum LdapConstraintViolation = (#{const LDAP_CONSTRAINT_VIOLATION})
- fromEnum LdapTypeOrValueExists = (#{const LDAP_TYPE_OR_VALUE_EXISTS})
- fromEnum LdapInvalidSyntax = (#{const LDAP_INVALID_SYNTAX})
- fromEnum LdapNoSuchObject = (#{const LDAP_NO_SUCH_OBJECT})
- fromEnum LdapAliasProblem = (#{const LDAP_ALIAS_PROBLEM})
- fromEnum LdapInvalidDnSyntax = (#{const LDAP_INVALID_DN_SYNTAX})
- fromEnum LdapIsLeaf = (#{const LDAP_IS_LEAF})
- fromEnum LdapAliasDerefProblem = (#{const LDAP_ALIAS_DEREF_PROBLEM})
- fromEnum LdapXProxyAuthzFailure = (#{const LDAP_X_PROXY_AUTHZ_FAILURE})
- fromEnum LdapInappropriateAuth = (#{const LDAP_INAPPROPRIATE_AUTH})
- fromEnum LdapInvalidCredentials = (#{const LDAP_INVALID_CREDENTIALS})
- fromEnum LdapInsufficientAccess = (#{const LDAP_INSUFFICIENT_ACCESS})
- fromEnum LdapBusy = (#{const LDAP_BUSY})
- fromEnum LdapUnavailable = (#{const LDAP_UNAVAILABLE})
- fromEnum LdapUnwillingToPerform = (#{const LDAP_UNWILLING_TO_PERFORM})
- fromEnum LdapLoopDetect = (#{const LDAP_LOOP_DETECT})
- fromEnum LdapNamingViolation = (#{const LDAP_NAMING_VIOLATION})
- fromEnum LdapObjectClassViolation = (#{const LDAP_OBJECT_CLASS_VIOLATION})
- fromEnum LdapNotAllowedOnNonleaf = (#{const LDAP_NOT_ALLOWED_ON_NONLEAF})
- fromEnum LdapNotAllowedOnRdn = (#{const LDAP_NOT_ALLOWED_ON_RDN})
- fromEnum LdapAlreadyExists = (#{const LDAP_ALREADY_EXISTS})
- fromEnum LdapNoObjectClassMods = (#{const LDAP_NO_OBJECT_CLASS_MODS})
- fromEnum LdapResultsTooLarge = (#{const LDAP_RESULTS_TOO_LARGE})
- fromEnum LdapAffectsMultipleDsas = (#{const LDAP_AFFECTS_MULTIPLE_DSAS})
- fromEnum LdapOther = (#{const LDAP_OTHER})
- fromEnum LdapServerDown = (#{const LDAP_SERVER_DOWN})
- fromEnum LdapLocalError = (#{const LDAP_LOCAL_ERROR})
- fromEnum LdapEncodingError = (#{const LDAP_ENCODING_ERROR})
- fromEnum LdapDecodingError = (#{const LDAP_DECODING_ERROR})
- fromEnum LdapTimeout = (#{const LDAP_TIMEOUT})
- fromEnum LdapAuthUnknown = (#{const LDAP_AUTH_UNKNOWN})
- fromEnum LdapFilterError = (#{const LDAP_FILTER_ERROR})
- fromEnum LdapUserCancelled = (#{const LDAP_USER_CANCELLED})
- fromEnum LdapParamError = (#{const LDAP_PARAM_ERROR})
- fromEnum LdapNoMemory = (#{const LDAP_NO_MEMORY})
- fromEnum LdapConnectError = (#{const LDAP_CONNECT_ERROR})
- fromEnum LdapNotSupported = (#{const LDAP_NOT_SUPPORTED})
- fromEnum LdapControlNotFound = (#{const LDAP_CONTROL_NOT_FOUND})
- fromEnum LdapNoResultsReturned = (#{const LDAP_NO_RESULTS_RETURNED})
- fromEnum LdapMoreResultsToReturn = (#{const LDAP_MORE_RESULTS_TO_RETURN})
- fromEnum LdapClientLoop = (#{const LDAP_CLIENT_LOOP})
- fromEnum LdapReferralLimitExceeded = (#{const LDAP_REFERRAL_LIMIT_EXCEEDED})
- fromEnum (UnknownLDAPReturnCode x) = x
+ fromEnum Success                      = (#{const LDAP_SUCCESS})
+ fromEnum OperationsError              = (#{const LDAP_OPERATIONS_ERROR})
+ fromEnum ProtocolError                = (#{const LDAP_PROTOCOL_ERROR})
+ fromEnum TimelimitExceeded            = (#{const LDAP_TIMELIMIT_EXCEEDED})
+ fromEnum SizelimitExceeded            = (#{const LDAP_SIZELIMIT_EXCEEDED})
+ fromEnum CompareFalse                 = (#{const LDAP_COMPARE_FALSE})
+ fromEnum CompareTrue                  = (#{const LDAP_COMPARE_TRUE})
+ fromEnum AuthMethodNotSupported       = (#{const LDAP_AUTH_METHOD_NOT_SUPPORTED})
+ fromEnum StrongAuthNotSupported       = (#{const LDAP_STRONG_AUTH_NOT_SUPPORTED})
+ fromEnum StrongAuthRequired           = (#{const LDAP_STRONG_AUTH_REQUIRED})
+ fromEnum PartialResults               = (#{const LDAP_PARTIAL_RESULTS})
+ fromEnum Referral                     = (#{const LDAP_REFERRAL})
+ fromEnum AdminlimitExceeded           = (#{const LDAP_ADMINLIMIT_EXCEEDED})
+ fromEnum UnavailableCriticalExtension = (#{const LDAP_UNAVAILABLE_CRITICAL_EXTENSION})
+ fromEnum ConfidentialityRequired      = (#{const LDAP_CONFIDENTIALITY_REQUIRED})
+ fromEnum SaslBindInProgress           = (#{const LDAP_SASL_BIND_IN_PROGRESS})
+ fromEnum NoSuchAttribute              = (#{const LDAP_NO_SUCH_ATTRIBUTE})
+ fromEnum UndefinedType                = (#{const LDAP_UNDEFINED_TYPE})
+ fromEnum InappropriateMatching        = (#{const LDAP_INAPPROPRIATE_MATCHING})
+ fromEnum ConstraintViolation          = (#{const LDAP_CONSTRAINT_VIOLATION})
+ fromEnum TypeOrValueExists            = (#{const LDAP_TYPE_OR_VALUE_EXISTS})
+ fromEnum InvalidSyntax                = (#{const LDAP_INVALID_SYNTAX})
+ fromEnum NoSuchObject                 = (#{const LDAP_NO_SUCH_OBJECT})
+ fromEnum AliasProblem                 = (#{const LDAP_ALIAS_PROBLEM})
+ fromEnum InvalidDnSyntax              = (#{const LDAP_INVALID_DN_SYNTAX})
+ fromEnum IsLeaf                       = (#{const LDAP_IS_LEAF})
+ fromEnum AliasDerefProblem            = (#{const LDAP_ALIAS_DEREF_PROBLEM})
+ fromEnum XProxyAuthzFailure           = (#{const LDAP_X_PROXY_AUTHZ_FAILURE})
+ fromEnum InappropriateAuth            = (#{const LDAP_INAPPROPRIATE_AUTH})
+ fromEnum InvalidCredentials           = (#{const LDAP_INVALID_CREDENTIALS})
+ fromEnum InsufficientAccess           = (#{const LDAP_INSUFFICIENT_ACCESS})
+ fromEnum Busy                         = (#{const LDAP_BUSY})
+ fromEnum Unavailable                  = (#{const LDAP_UNAVAILABLE})
+ fromEnum UnwillingToPerform           = (#{const LDAP_UNWILLING_TO_PERFORM})
+ fromEnum LoopDetect                   = (#{const LDAP_LOOP_DETECT})
+ fromEnum NamingViolation              = (#{const LDAP_NAMING_VIOLATION})
+ fromEnum ObjectClassViolation         = (#{const LDAP_OBJECT_CLASS_VIOLATION})
+ fromEnum NotAllowedOnNonleaf          = (#{const LDAP_NOT_ALLOWED_ON_NONLEAF})
+ fromEnum NotAllowedOnRdn              = (#{const LDAP_NOT_ALLOWED_ON_RDN})
+ fromEnum AlreadyExists                = (#{const LDAP_ALREADY_EXISTS})
+ fromEnum NoObjectClassMods            = (#{const LDAP_NO_OBJECT_CLASS_MODS})
+ fromEnum ResultsTooLarge              = (#{const LDAP_RESULTS_TOO_LARGE})
+ fromEnum AffectsMultipleDsas          = (#{const LDAP_AFFECTS_MULTIPLE_DSAS})
+ fromEnum Other                        = (#{const LDAP_OTHER})
+ fromEnum ServerDown                   = (#{const LDAP_SERVER_DOWN})
+ fromEnum LocalError                   = (#{const LDAP_LOCAL_ERROR})
+ fromEnum EncodingError                = (#{const LDAP_ENCODING_ERROR})
+ fromEnum DecodingError                = (#{const LDAP_DECODING_ERROR})
+ fromEnum Timeout                      = (#{const LDAP_TIMEOUT})
+ fromEnum AuthUnknown                  = (#{const LDAP_AUTH_UNKNOWN})
+ fromEnum FilterError                  = (#{const LDAP_FILTER_ERROR})
+ fromEnum UserCancelled                = (#{const LDAP_USER_CANCELLED})
+ fromEnum ParamError                   = (#{const LDAP_PARAM_ERROR})
+ fromEnum NoMemory                     = (#{const LDAP_NO_MEMORY})
+ fromEnum ConnectError                 = (#{const LDAP_CONNECT_ERROR})
+ fromEnum NotSupported                 = (#{const LDAP_NOT_SUPPORTED})
+ fromEnum ControlNotFound              = (#{const LDAP_CONTROL_NOT_FOUND})
+ fromEnum NoResultsReturned            = (#{const LDAP_NO_RESULTS_RETURNED})
+ fromEnum MoreResultsToReturn          = (#{const LDAP_MORE_RESULTS_TO_RETURN})
+ fromEnum ClientLoop                   = (#{const LDAP_CLIENT_LOOP})
+ fromEnum ReferralLimitExceeded        = (#{const LDAP_REFERRAL_LIMIT_EXCEEDED})
+ fromEnum (UnknownReturnCode x)   = x
 
 instance Ord LDAPReturnCode where
- compare x y = compare (fromEnum x) (fromEnum y)
+    compare x y = compare (fromEnum x) (fromEnum y)
 
 instance Eq LDAPReturnCode where
- x == y = (fromEnum x) == (fromEnum y)
+    x == y = (fromEnum x) == (fromEnum y)
 
 
-data LDAPOptionCode =
-   LdapOptApiInfo
- | LdapOptDesc
- | LdapOptDeref
- | LdapOptSizelimit
- | LdapOptTimelimit
- | LdapOptReferrals
- | LdapOptRestart
- | LdapOptProtocolVersion
- | LdapOptServerControls
- | LdapOptClientControls
- | LdapOptApiFeatureInfo
- | LdapOptHostName
- | LdapOptErrorNumber
- | LdapOptErrorString
- | LdapOptMatchedDn
- | LdapOptSuccess
- | LdapOptError
- | UnknownLDAPOptionCode Int
+data OptionCode = OptApiInfo
+                | OptDesc
+                | OptDeref
+                | OptSizeLimit
+                | OptTimeLimit
+                | OptReferrals
+                | OptRestart
+                | OptProtocolVersion
+                | OptServerControls
+                | OptClientControls
+                | OptApiFeatureInfo
+                | OptHostName
+                | OptErrorNumber
+                | OptErrorString
+                | OptMatchedDn
+                | OptSuccess
+                | OptError
+                | UnknownOptionCode Int
+    deriving (Show)
 
- deriving (Show)
+instance Enum OptionCode where
+ toEnum (#{const LDAP_OPT_API_INFO})         = OptApiInfo
+ toEnum (#{const LDAP_OPT_DESC})             = OptDesc
+ toEnum (#{const LDAP_OPT_DEREF})            = OptDeref
+ toEnum (#{const LDAP_OPT_SIZELIMIT})        = OptSizeLimit
+ toEnum (#{const LDAP_OPT_TIMELIMIT})        = OptTimeLimit
+ toEnum (#{const LDAP_OPT_REFERRALS})        = OptReferrals
+ toEnum (#{const LDAP_OPT_RESTART})          = OptRestart
+ toEnum (#{const LDAP_OPT_PROTOCOL_VERSION}) = OptProtocolVersion
+ toEnum (#{const LDAP_OPT_SERVER_CONTROLS})  = OptServerControls
+ toEnum (#{const LDAP_OPT_CLIENT_CONTROLS})  = OptClientControls
+ toEnum (#{const LDAP_OPT_API_FEATURE_INFO}) = OptApiFeatureInfo
+ toEnum (#{const LDAP_OPT_HOST_NAME})        = OptHostName
+ toEnum (#{const LDAP_OPT_ERROR_NUMBER})     = OptErrorNumber
+ toEnum (#{const LDAP_OPT_ERROR_STRING})     = OptErrorString
+ toEnum (#{const LDAP_OPT_MATCHED_DN})       = OptMatchedDn
+ toEnum (#{const LDAP_OPT_SUCCESS})          = OptSuccess
+ toEnum (#{const LDAP_OPT_ERROR})            = OptError
+ toEnum x                                    = UnknownOptionCode x
 
-instance Enum LDAPOptionCode where
- toEnum (#{const LDAP_OPT_API_INFO}) = LdapOptApiInfo
- toEnum (#{const LDAP_OPT_DESC}) = LdapOptDesc
- toEnum (#{const LDAP_OPT_DEREF}) = LdapOptDeref
- toEnum (#{const LDAP_OPT_SIZELIMIT}) = LdapOptSizelimit
- toEnum (#{const LDAP_OPT_TIMELIMIT}) = LdapOptTimelimit
- toEnum (#{const LDAP_OPT_REFERRALS}) = LdapOptReferrals
- toEnum (#{const LDAP_OPT_RESTART}) = LdapOptRestart
- toEnum (#{const LDAP_OPT_PROTOCOL_VERSION}) = LdapOptProtocolVersion
- toEnum (#{const LDAP_OPT_SERVER_CONTROLS}) = LdapOptServerControls
- toEnum (#{const LDAP_OPT_CLIENT_CONTROLS}) = LdapOptClientControls
- toEnum (#{const LDAP_OPT_API_FEATURE_INFO}) = LdapOptApiFeatureInfo
- toEnum (#{const LDAP_OPT_HOST_NAME}) = LdapOptHostName
- toEnum (#{const LDAP_OPT_ERROR_NUMBER}) = LdapOptErrorNumber
- toEnum (#{const LDAP_OPT_ERROR_STRING}) = LdapOptErrorString
- toEnum (#{const LDAP_OPT_MATCHED_DN}) = LdapOptMatchedDn
- toEnum (#{const LDAP_OPT_SUCCESS}) = LdapOptSuccess
- toEnum (#{const LDAP_OPT_ERROR}) = LdapOptError
- toEnum x = UnknownLDAPOptionCode x
+ fromEnum OptApiInfo               = (#{const LDAP_OPT_API_INFO})
+ fromEnum OptDesc                  = (#{const LDAP_OPT_DESC})
+ fromEnum OptDeref                 = (#{const LDAP_OPT_DEREF})
+ fromEnum OptSizeLimit             = (#{const LDAP_OPT_SIZELIMIT})
+ fromEnum OptTimeLimit             = (#{const LDAP_OPT_TIMELIMIT})
+ fromEnum OptReferrals             = (#{const LDAP_OPT_REFERRALS})
+ fromEnum OptRestart               = (#{const LDAP_OPT_RESTART})
+ fromEnum OptProtocolVersion       = (#{const LDAP_OPT_PROTOCOL_VERSION})
+ fromEnum OptServerControls        = (#{const LDAP_OPT_SERVER_CONTROLS})
+ fromEnum OptClientControls        = (#{const LDAP_OPT_CLIENT_CONTROLS})
+ fromEnum OptApiFeatureInfo        = (#{const LDAP_OPT_API_FEATURE_INFO})
+ fromEnum OptHostName              = (#{const LDAP_OPT_HOST_NAME})
+ fromEnum OptErrorNumber           = (#{const LDAP_OPT_ERROR_NUMBER})
+ fromEnum OptErrorString           = (#{const LDAP_OPT_ERROR_STRING})
+ fromEnum OptMatchedDn             = (#{const LDAP_OPT_MATCHED_DN})
+ fromEnum OptSuccess               = (#{const LDAP_OPT_SUCCESS})
+ fromEnum OptError                 = (#{const LDAP_OPT_ERROR})
+ fromEnum (UnknownOptionCode x)    = x
 
- fromEnum LdapOptApiInfo = (#{const LDAP_OPT_API_INFO})
- fromEnum LdapOptDesc = (#{const LDAP_OPT_DESC})
- fromEnum LdapOptDeref = (#{const LDAP_OPT_DEREF})
- fromEnum LdapOptSizelimit = (#{const LDAP_OPT_SIZELIMIT})
- fromEnum LdapOptTimelimit = (#{const LDAP_OPT_TIMELIMIT})
- fromEnum LdapOptReferrals = (#{const LDAP_OPT_REFERRALS})
- fromEnum LdapOptRestart = (#{const LDAP_OPT_RESTART})
- fromEnum LdapOptProtocolVersion = (#{const LDAP_OPT_PROTOCOL_VERSION})
- fromEnum LdapOptServerControls = (#{const LDAP_OPT_SERVER_CONTROLS})
- fromEnum LdapOptClientControls = (#{const LDAP_OPT_CLIENT_CONTROLS})
- fromEnum LdapOptApiFeatureInfo = (#{const LDAP_OPT_API_FEATURE_INFO})
- fromEnum LdapOptHostName = (#{const LDAP_OPT_HOST_NAME})
- fromEnum LdapOptErrorNumber = (#{const LDAP_OPT_ERROR_NUMBER})
- fromEnum LdapOptErrorString = (#{const LDAP_OPT_ERROR_STRING})
- fromEnum LdapOptMatchedDn = (#{const LDAP_OPT_MATCHED_DN})
- fromEnum LdapOptSuccess = (#{const LDAP_OPT_SUCCESS})
- fromEnum LdapOptError = (#{const LDAP_OPT_ERROR})
- fromEnum (UnknownLDAPOptionCode x) = x
-
-instance Ord LDAPOptionCode where
+instance Ord OptionCode where
  compare x y = compare (fromEnum x) (fromEnum y)
 
-instance Eq LDAPOptionCode where
+instance Eq OptionCode where
  x == y = (fromEnum x) == (fromEnum y)
 
 
-data LDAPScope =
-   LdapScopeDefault
- | LdapScopeBase
- | LdapScopeOnelevel
- | LdapScopeSubtree
- | UnknownLDAPScope Int
+data Scope = Default
+           | Base
+           | OneLevel
+           | Subtree
+           | UnknownScope Int
+    deriving (Show)
 
- deriving (Show)
+instance Enum Scope where
+    toEnum (#{const LDAP_SCOPE_DEFAULT})  = Default
+    toEnum (#{const LDAP_SCOPE_BASE})     = Base
+    toEnum (#{const LDAP_SCOPE_ONELEVEL}) = OneLevel
+    toEnum (#{const LDAP_SCOPE_SUBTREE})  = Subtree
+    toEnum x                              = UnknownScope x
 
-instance Enum LDAPScope where
- toEnum (#{const LDAP_SCOPE_DEFAULT}) = LdapScopeDefault
- toEnum (#{const LDAP_SCOPE_BASE}) = LdapScopeBase
- toEnum (#{const LDAP_SCOPE_ONELEVEL}) = LdapScopeOnelevel
- toEnum (#{const LDAP_SCOPE_SUBTREE}) = LdapScopeSubtree
- toEnum x = UnknownLDAPScope x
+    fromEnum Default          = (#{const LDAP_SCOPE_DEFAULT})
+    fromEnum Base             = (#{const LDAP_SCOPE_BASE})
+    fromEnum OneLevel         = (#{const LDAP_SCOPE_ONELEVEL})
+    fromEnum Subtree          = (#{const LDAP_SCOPE_SUBTREE})
+    fromEnum (UnknownScope x) = x
 
- fromEnum LdapScopeDefault = (#{const LDAP_SCOPE_DEFAULT})
- fromEnum LdapScopeBase = (#{const LDAP_SCOPE_BASE})
- fromEnum LdapScopeOnelevel = (#{const LDAP_SCOPE_ONELEVEL})
- fromEnum LdapScopeSubtree = (#{const LDAP_SCOPE_SUBTREE})
- fromEnum (UnknownLDAPScope x) = x
+instance Ord Scope where
+    compare x y = compare (fromEnum x) (fromEnum y)
 
-instance Ord LDAPScope where
- compare x y = compare (fromEnum x) (fromEnum y)
-
-instance Eq LDAPScope where
- x == y = (fromEnum x) == (fromEnum y)
+instance Eq Scope where
+    x == y = (fromEnum x) == (fromEnum y)
 
 
-data LDAPModOp =
-   LdapModAdd
- | LdapModDelete
- | LdapModReplace
- | UnknownLDAPModOp Int
+data ModOp = Add
+           | Delete
+           | Replace
+           | UnknownModOp Int
+    deriving (Show)
 
- deriving (Show)
+instance Enum ModOp where
+    toEnum (#{const LDAP_MOD_ADD})     = Add
+    toEnum (#{const LDAP_MOD_DELETE})  = Delete
+    toEnum (#{const LDAP_MOD_REPLACE}) = Replace
+    toEnum x                           = UnknownModOp x
 
-instance Enum LDAPModOp where
- toEnum (#{const LDAP_MOD_ADD}) = LdapModAdd
- toEnum (#{const LDAP_MOD_DELETE}) = LdapModDelete
- toEnum (#{const LDAP_MOD_REPLACE}) = LdapModReplace
- toEnum x = UnknownLDAPModOp x
+    fromEnum Add              = (#{const LDAP_MOD_ADD})
+    fromEnum Delete           = (#{const LDAP_MOD_DELETE})
+    fromEnum Replace          = (#{const LDAP_MOD_REPLACE})
+    fromEnum (UnknownModOp x) = x
 
- fromEnum LdapModAdd = (#{const LDAP_MOD_ADD})
- fromEnum LdapModDelete = (#{const LDAP_MOD_DELETE})
- fromEnum LdapModReplace = (#{const LDAP_MOD_REPLACE})
- fromEnum (UnknownLDAPModOp x) = x
+instance Ord ModOp where
+    compare x y = compare (fromEnum x) (fromEnum y)
 
-instance Ord LDAPModOp where
- compare x y = compare (fromEnum x) (fromEnum y)
-
-instance Eq LDAPModOp where
- x == y = (fromEnum x) == (fromEnum y)
-
-
+instance Eq ModOp where
+    x == y = (fromEnum x) == (fromEnum y)

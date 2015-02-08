@@ -27,6 +27,7 @@ module Network.LDAP.Init
 , simpleBind
 ) where
 
+import Prelude hiding (init)
 import Foreign.Ptr
 import Foreign.ForeignPtr
 import Foreign.C.String
@@ -59,10 +60,10 @@ init :: String              -- ^ Host
      -> IO LDAP             -- ^ New LDAP Obj
 init host port =
     withCString host $ \cs ->
-       do rv <- fromLDAPPtr "ldapInit" (cldap_init cs port)
+       do rv <- fromLDAPPtr "init" (cldap_init cs port)
           withForeignPtr rv $ \cld -> do
-              ldapSetVersion3 cld
-              ldapSetRestart cld
+              setVersion3 cld
+              setRestart cld
           return rv
 
 {- | Like 'init', but establish network connection immediately. -}
@@ -72,7 +73,7 @@ open :: String           -- ^ Host
 open host port =
     withCString host (\cs ->
         do rv <- fromLDAPPtr "ldapOpen" (cldap_open cs port)
-           withForeignPtr rv ldapSetRestart
+           withForeignPtr rv setRestart
            return rv)
 
 {- | Like 'ldapInit', but accepts a URI (or whitespace/comma separated
@@ -88,8 +89,8 @@ initialize uri =
     ldap <- fromLDAPPtr "ldapInitialize" (peek pp)
     _ <- checkLE "ldapInitialize" ldap (return r)
     withForeignPtr ldap $ \p -> do
-        ldapSetVersion3 p
-        ldapSetRestart p
+        setVersion3 p
+        setRestart p
     return ldap
 
 
@@ -102,8 +103,7 @@ simpleBind ld dn passwd =
     withLDAPPtr ld (\ptr ->
      withCString dn (\cdn ->
       withCString passwd (\cpasswd ->
-        do checkLE "ldapSimpleBind" ld
-           (ldap_simple_bind_s ptr cdn cpasswd)
+        do checkLE "simpleBind" ld (ldap_simple_bind_s ptr cdn cpasswd)
            return ()
       )))
 

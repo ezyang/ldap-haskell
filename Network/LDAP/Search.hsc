@@ -22,9 +22,9 @@ Written by John Goerzen, jgoerzen\@complete.org
 
 module Network.LDAP.Search
 ( SearchAttributes(..)
-, LDAPEntry(..)
-, LDAPScope(..)
-, ldapSearch
+, Entry(..)
+, Scope(..)
+, search
 )
 where
 
@@ -43,32 +43,31 @@ import Control.Exception(finally)
 #include <ldap.h>
 
 {- | Defines what attributes to return with the search result. -}
-data SearchAttributes =
-   LDAPNoAttrs                   -- ^ No attributes
- | LDAPAllUserAttrs              -- ^ User attributes only
- | LDAPAttrList [String]         -- ^ User-specified list
+data SearchAttributes = NoAttrs            -- ^ No attributes
+                      | AllUserAttrs       -- ^ User attributes only
+                      | AttrList [String]  -- ^ User-specified list
    deriving (Eq, Show)
 
 sa2sl :: SearchAttributes -> [String]
-sa2sl LDAPNoAttrs = [ #{const_str LDAP_NO_ATTRS} ]
-sa2sl LDAPAllUserAttrs = [ #{const_str LDAP_ALL_USER_ATTRIBUTES} ]
-sa2sl (LDAPAttrList x) = x
+sa2sl NoAttrs = [ #{const_str LDAP_NO_ATTRS} ]
+sa2sl AllUserAttrs = [ #{const_str LDAP_ALL_USER_ATTRIBUTES} ]
+sa2sl (AttrList x) = x
 
-data LDAPEntry = LDAPEntry 
-    {ledn :: String             -- ^ Distinguished Name of this object
-    ,leattrs :: [(String, [String])] -- ^ Mapping from attribute name to values
-                           }
+data Entry = Entry
+             { dn    :: String               -- ^ Distinguished Name of this object
+             , attrs :: [(String, [String])] -- ^ Mapping from attribute name to values
+             }
     deriving (Eq, Show)
 
-ldapSearch :: LDAP              -- ^ LDAP connection object
-           -> Maybe String      -- ^ Base DN for search, if any
-           -> LDAPScope         -- ^ Scope of the search
-           -> Maybe String      -- ^ Filter to be used (none if Nothing)
-           -> SearchAttributes  -- ^ Desired attributes in result set
-           -> Bool              -- ^ If True, exclude attribute values (return types only)
-           -> IO [LDAPEntry]
+search :: LDAP              -- ^ LDAP connection object
+       -> Maybe String      -- ^ Base DN for search, if any
+       -> Scope             -- ^ Scope of the search
+       -> Maybe String      -- ^ Filter to be used (none if Nothing)
+       -> SearchAttributes  -- ^ Desired attributes in result set
+       -> Bool              -- ^ If True, exclude attribute values (return types only)
+       -> IO [Entry]
 
-ldapSearch ld base scope filter attrs attrsonly =
+search ld base scope filter attrs attrsonly =
   withLDAPPtr ld (\cld ->
   withMString base (\cbase ->
   withMString filter (\cfilter ->
@@ -82,7 +81,7 @@ ldapSearch ld base scope filter attrs attrsonly =
                     )
                   )
 
-procSR :: LDAP -> Ptr CLDAP -> LDAPInt -> IO [LDAPEntry]
+procSR :: LDAP -> Ptr CLDAP -> LDAPInt -> IO [Entry]
 procSR ld cld msgid =
   do res1 <- ldap_1result ld msgid
      --putStrLn "Have 1result"
@@ -97,10 +96,10 @@ procSR ld cld msgid =
                     attrs <- getattrs ld felm
                     next <- procSR ld cld msgid
                     --putStrLn $ "Next is " ++ (show next)
-                    return $ (LDAPEntry {ledn = dn, leattrs = attrs}):next
-                         )
-      
-
+                    return $ (Entry { dn    = dn
+                                    , attrs = attrs
+                                    }
+                             ) : next)
 
 data BerElement
 
