@@ -36,8 +36,8 @@ test-ghc: setup
 	./dist/build/runtests/runtests
 
 genexceptions:
-	runhugs genexceptions.hs
+	runghc genexceptions.hs
 
 data:
-	runhugs utils/genconsts.hs > LDAP/Data.hsc
+	runghc utils/genconsts.hs > Network/LDAP/Data.hsc
 

@@ -19,21 +19,25 @@ Basic types for LDAP programs.
 
 Written by John Goerzen, jgoerzen\@complete.org
 
-See also "LDAP.Data" for types relating to return codes, option codes, etc.
+See also "Network.LDAP.Data" for types relating to return codes,
+option codes, etc.
 -}
 
-module LDAP.Types(-- * General
-                  LDAP, LDAPInt, BERInt, BERTag, BERLen
-                 )
-where
+module Network.LDAP.Types
+( LDAP
+, LDAPInt
+, BERInt
+, BERTag
+, BERLen
+) where
 
 import Foreign.Ptr
 import Data.Word
 import Data.Int
 import Foreign.C.Types
 import Foreign.ForeignPtr
-import LDAP.TypesLL
-import LDAP.Data
+import Network.LDAP.TypesLL
+import Network.LDAP.Data
 
 #include <ldap.h>
 

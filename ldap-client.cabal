@@ -1,17 +1,19 @@
 cabal-version: >=1.8
 
-Name: LDAP
+Name: ldap-client
 Version: 0.6.10
 License: BSD3
-Maintainer: Edward Z. Yang <ezyang@mit.edu>
-Author: John Goerzen, Edward Z. Yang
+Maintainer: Matt Gambogi
+Author: John Goerzen
+      , Edward Z. Yang
+      , Matt Gambogi
 Stability: Beta
-Copyright: Copyright (c) 2005-2014 John Goerzen, Edward Z. Yang
-homepage: https://github.com/ezyang/ldap-haskell
+Copyright: Copyright (c) 2005-2015 John Goerzen, Edward Z. Yang, Matt Gambogi
+homepage: https://github.com/gambogi/ldap-client
 Category: Network
 Synopsis: Haskell binding for C LDAP API
 Description: This package provides LDAP interface code for Haskell programs,
- binding to the C LDAP API.
+             binding to the C LDAP API.
 license-file: COPYRIGHT
 extra-source-files: COPYING
 
@@ -23,19 +25,17 @@ Flag buildtests
 
 Library
   -- C-Sources: glue/glue.c
-  Exposed-Modules: LDAP,
-   LDAP.Types,
-   LDAP.Init,
-   LDAP.Constants,
-   LDAP.Data,
-   LDAP.Exceptions,
-   LDAP.Search,
-   LDAP.Modify
-  Other-Modules: LDAP.Utils,
-   LDAP.TypesLL,
-   LDAP.Result
-  Build-Depends: base
-
+  Exposed-Modules: Network.LDAP
+                 , Network.LDAP.Types
+                 , Network.LDAP.Init
+                 , Network.LDAP.Constants
+                 , Network.LDAP.Data
+                 , Network.LDAP.Exceptions
+                 , Network.LDAP.Search
+                 , Network.LDAP.Modify
+  Other-Modules: Network.LDAP.Utils
+               , Network.LDAP.TypesLL
+               , Network.LDAP.Result
   build-depends: base >= 4 && <5
 
   Extra-Libraries: ldap, lber
@@ -55,7 +55,7 @@ Test-Suite test-ldap
   main-is: runtests.hs
   Extra-Libraries: ldap, lber
   build-depends: base >= 4 && < 5,
-                 LDAP,
+                 ldap-client,
                  HUnit
   if os(openbsd)
     CC-Options: -DLDAP_X_PROXY_AUTHZ_FAILURE=LDAP_PROXY_AUTHZ_FAILURE

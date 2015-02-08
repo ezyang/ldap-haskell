@@ -20,10 +20,12 @@ LDAP constants for use in your programs
 Written by John Goerzen, jgoerzen\@complete.org
 -}
 
-module LDAP.Constants(module LDAP.Constants)
+module Network.LDAP.Constants
+( module Network.LDAP.Constants
+)
 where
 import Foreign.C.Types
-import LDAP.Types
+import Network.LDAP.Types
 
 #include "ldap.h"
 

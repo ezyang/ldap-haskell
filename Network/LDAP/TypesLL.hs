@@ -20,8 +20,10 @@ Low-level types for LDAP programs.
 Written by John Goerzen, jgoerzen\@complete.org
 -}
 
-module LDAP.TypesLL(CLDAP, Berval)
-where
+module Network.LDAP.TypesLL
+( CLDAP
+, Berval
+) where
 
 data CLDAP
 data Berval
