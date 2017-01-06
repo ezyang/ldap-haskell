@@ -23,7 +23,8 @@ Written by John Goerzen, jgoerzen\@complete.org
 module LDAP.Init(ldapOpen,
                  ldapInit,
                  ldapInitialize,
-                 ldapSimpleBind)
+                 ldapSimpleBind,
+                 ldapTrivialExternalSaslBind)
 where
 
 import Foreign.Ptr
@@ -106,6 +107,15 @@ ldapSimpleBind ld dn passwd =
            return ()
                          )))
 
+{- | Bind with SASL external mechanism. -}
+ldapTrivialExternalSaslBind :: LDAP -- ^ LDAP Object
+                     -> IO ()
+ldapTrivialExternalSaslBind ld =
+    withLDAPPtr ld (\ptr ->
+        do checkLE "ldapTrivialExternalSaslBind" ld (trivial_external_sasl_bind ptr)
+           return ()
+      )
+
 foreign import ccall unsafe "ldap.h ldap_init"
   cldap_init :: CString -> CInt -> IO LDAPPtr
 
@@ -118,6 +128,9 @@ foreign import ccall unsafe "ldap.h ldap_initialize"
 
 foreign import ccall safe "ldap.h ldap_simple_bind_s"
   ldap_simple_bind_s :: LDAPPtr -> CString -> CString -> IO LDAPInt
+
+foreign import ccall safe "sasl_bind.h trivial_external_sasl_bind"
+  trivial_external_sasl_bind :: LDAPPtr -> IO LDAPInt
 
 foreign import ccall unsafe "ldap.h ldap_set_option"
   ldap_set_option :: LDAPPtr -> LDAPInt -> Ptr () -> IO LDAPInt

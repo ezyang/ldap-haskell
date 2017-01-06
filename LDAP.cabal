@@ -1,19 +1,22 @@
 cabal-version: >=1.8
 
 Name: LDAP
-Version: 0.6.10
+Version: 0.7.0
 License: BSD3
 Maintainer: Edward Z. Yang <ezyang@mit.edu>
 Author: John Goerzen, Edward Z. Yang
 Stability: Beta
-Copyright: Copyright (c) 2005-2014 John Goerzen, Edward Z. Yang
+Copyright: Copyright (c) 2005-2016 John Goerzen, Edward Z. Yang
 homepage: https://github.com/ezyang/ldap-haskell
 Category: Network
 Synopsis: Haskell binding for C LDAP API
 Description: This package provides LDAP interface code for Haskell programs,
  binding to the C LDAP API.
 license-file: COPYRIGHT
-extra-source-files: COPYING
+extra-source-files:
+  COPYING
+  ChangeLog.md
+  sasl_bind.h
 
 Build-Type: Simple
 
@@ -22,7 +25,7 @@ Flag buildtests
   default: False
 
 Library
-  -- C-Sources: glue/glue.c
+  C-Sources: sasl_bind.c
   Exposed-Modules: LDAP,
    LDAP.Types,
    LDAP.Init,
