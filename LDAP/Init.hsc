@@ -24,7 +24,7 @@ module LDAP.Init(ldapOpen,
                  ldapInit,
                  ldapInitialize,
                  ldapSimpleBind,
-                 ldapExternalSaslBind)
+                 ldapTrivialExternalSaslBind)
 where
 
 import Foreign.Ptr
@@ -108,11 +108,11 @@ ldapSimpleBind ld dn passwd =
                          )))
 
 {- | Bind with SASL external mechanism. -}
-ldapExternalSaslBind :: LDAP -- ^ LDAP Object
+ldapTrivialExternalSaslBind :: LDAP -- ^ LDAP Object
                      -> IO ()
-ldapExternalSaslBind ld =
+ldapTrivialExternalSaslBind ld =
     withLDAPPtr ld (\ptr ->
-        do checkLE "ldapExternalSaslBind" ld (sasl_trivial_external ptr)
+        do checkLE "ldapTrivialExternalSaslBind" ld (trivial_external_sasl_bind ptr)
            return ()
       )
 
@@ -129,8 +129,8 @@ foreign import ccall unsafe "ldap.h ldap_initialize"
 foreign import ccall safe "ldap.h ldap_simple_bind_s"
   ldap_simple_bind_s :: LDAPPtr -> CString -> CString -> IO LDAPInt
 
-foreign import ccall unsafe
-  sasl_trivial_external :: LDAPPtr -> IO LDAPInt
+foreign import ccall safe "sasl_bind.h trivial_external_sasl_bind"
+  trivial_external_sasl_bind :: LDAPPtr -> IO LDAPInt
 
 foreign import ccall unsafe "ldap.h ldap_set_option"
   ldap_set_option :: LDAPPtr -> LDAPInt -> Ptr () -> IO LDAPInt
