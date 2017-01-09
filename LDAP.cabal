@@ -13,7 +13,9 @@ Synopsis: Haskell binding for C LDAP API
 Description: This package provides LDAP interface code for Haskell programs,
  binding to the C LDAP API.
 license-file: COPYRIGHT
-extra-source-files: COPYING
+extra-source-files:
+ COPYING
+ sasl_external.h
 
 Build-Type: Simple
 

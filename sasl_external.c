@@ -1,6 +1,8 @@
 #include <ldap.h>
 #include <sasl/sasl.h>
 
+#include "sasl_external.h"
+
 struct external_defaults {
   const char *authzPtr;
   int authzLen;

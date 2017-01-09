@@ -131,7 +131,7 @@ foreign import ccall unsafe "ldap.h ldap_initialize"
 foreign import ccall safe "ldap.h ldap_simple_bind_s"
   ldap_simple_bind_s :: LDAPPtr -> CString -> CString -> IO LDAPInt
 
-foreign import ccall safe
+foreign import ccall safe "sasl_external.h external_sasl_bind"
   external_sasl_bind :: LDAPPtr -> CString -> Int -> IO LDAPInt
 
 foreign import ccall unsafe "ldap.h ldap_set_option"
