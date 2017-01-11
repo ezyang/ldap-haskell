@@ -1,12 +1,12 @@
 cabal-version: >=1.8
 
 Name: LDAP
-Version: 0.6.10
+Version: 0.6.11
 License: BSD3
 Maintainer: Edward Z. Yang <ezyang@mit.edu>
 Author: John Goerzen, Edward Z. Yang
 Stability: Beta
-Copyright: Copyright (c) 2005-2014 John Goerzen, Edward Z. Yang
+Copyright: Copyright (c) 2005-2017 John Goerzen, Edward Z. Yang
 homepage: https://github.com/ezyang/ldap-haskell
 Category: Network
 Synopsis: Haskell binding for C LDAP API
@@ -15,6 +15,7 @@ Description: This package provides LDAP interface code for Haskell programs,
 license-file: COPYRIGHT
 extra-source-files:
  COPYING
+ ChangeLog.md
  sasl_external.h
 
 Build-Type: Simple
@@ -44,7 +45,6 @@ Library
 
 
   GHC-Options: -O2
-  -- CC-Options: -Iglue
   if os(openbsd)
     CC-Options: -DLDAP_X_PROXY_AUTHZ_FAILURE=LDAP_PROXY_AUTHZ_FAILURE
   else
